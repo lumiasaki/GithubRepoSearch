@@ -29,9 +29,15 @@ final class RepoResultListViewModel {
         return loadingSubject.eraseToAnyPublisher()
     }
     
+    /// Observe this publisher to navigate to repository detail page by given url
+    var jumpToRepositoryDetail: AnyPublisher<URL, Never> {
+        return jumpToRepositoryDetailSubject.eraseToAnyPublisher()
+    }
+    
     private var repositoriesSubject: CurrentValueSubject<(repositories: [RepositoryDisplayItem], hasMore: Bool), Never> = CurrentValueSubject(([], false))
     private var errorSubject: PassthroughSubject<NetworkError?, Never> = PassthroughSubject()
     private var loadingSubject: CurrentValueSubject<Bool, Never> = CurrentValueSubject(true)
+    private var jumpToRepositoryDetailSubject: PassthroughSubject<URL, Never> = PassthroughSubject()
     
     /// The page of request
     private var pcursor: CurrentValueSubject<Int, Never> = CurrentValueSubject(1)
@@ -147,5 +153,21 @@ extension RepoResultListViewModel {
         
         let currentPage = pcursor.value
         pcursor.send(currentPage + 1)
+    }
+    
+    /// Select repository to jump to detail page ( home page of the repository )
+    /// - Parameter indexPath: IndexPath
+    func selectRepository(at indexPath: IndexPath) {
+        guard indexPath.item < repositoriesSubject.value.repositories.count else {
+            Logger.log("try to select indexPath: \(indexPath), out of bounds", level: .error)
+            return
+        }
+        
+        let selectedRepository = repositoriesSubject.value.repositories[indexPath.item]
+        let urlString = selectedRepository.underlyingRepository.htmlUrl
+        
+        if let url = URL(string: urlString ?? "") {
+            jumpToRepositoryDetailSubject.send(url)
+        }
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SafariServices
 
 final class RepoResultListViewController: UIViewController {
     
@@ -111,6 +112,16 @@ extension RepoResultListViewController {
             .store(in: &bag)
         
         viewModel
+            .jumpToRepositoryDetail
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] url in
+                let viewController = SFSafariViewController(url: url)
+                
+                self?.present(viewController, animated: true)
+            }
+            .store(in: &bag)
+        
+        viewModel
             .error
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
@@ -144,5 +155,11 @@ extension RepoResultListViewController: UICollectionViewDelegate {
         
         // reach to the end of list
         viewModel.tryRequestNextPageIfNeeded()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        viewModel.selectRepository(at: indexPath)
     }
 }
