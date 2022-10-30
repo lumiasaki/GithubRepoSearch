@@ -68,6 +68,7 @@ final class RepositoryCell: UICollectionViewCell {
     private lazy var languageLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
         view.font = .preferredFont(forTextStyle: .body)
         view.textColor = .secondaryLabel
         return view

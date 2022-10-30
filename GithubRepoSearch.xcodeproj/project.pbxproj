@@ -54,6 +54,8 @@
 		9F4AB1CE290E50C1007180A2 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1CD290E50C1007180A2 /* Double+Extension.swift */; };
 		9F4AB1D1290E5225007180A2 /* XCTestCase+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D0290E5225007180A2 /* XCTestCase+Extension.swift */; };
 		9F4AB1D3290E551D007180A2 /* RepoResultListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D2290E551D007180A2 /* RepoResultListTests.swift */; };
+		9F4AB1D5290E855F007180A2 /* RepositoryListFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D4290E855F007180A2 /* RepositoryListFooterCell.swift */; };
+		9F4AB1D7290EBA30007180A2 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D6290EBA30007180A2 /* Array+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,6 +127,8 @@
 		9F4AB1CD290E50C1007180A2 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		9F4AB1D0290E5225007180A2 /* XCTestCase+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Extension.swift"; sourceTree = "<group>"; };
 		9F4AB1D2290E551D007180A2 /* RepoResultListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoResultListTests.swift; sourceTree = "<group>"; };
+		9F4AB1D4290E855F007180A2 /* RepositoryListFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListFooterCell.swift; sourceTree = "<group>"; };
+		9F4AB1D6290EBA30007180A2 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -369,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				9F4AB1AA290D6D04007180A2 /* RepositoryCell.swift */,
+				9F4AB1D4290E855F007180A2 /* RepositoryListFooterCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -381,6 +386,7 @@
 				9F4AB1C9290E47CD007180A2 /* UIImageView+Extension.swift */,
 				9F4AB1CB290E50AF007180A2 /* Int+Extension.swift */,
 				9F4AB1CD290E50C1007180A2 /* Double+Extension.swift */,
+				9F4AB1D6290EBA30007180A2 /* Array+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -564,6 +570,7 @@
 				9F4AB1C4290D88A7007180A2 /* LogLevel.swift in Sources */,
 				9F4AB1B3290D7717007180A2 /* DemandBuffer.swift in Sources */,
 				9F4AB193290D5918007180A2 /* SearchRepoResponse.swift in Sources */,
+				9F4AB1D5290E855F007180A2 /* RepositoryListFooterCell.swift in Sources */,
 				9F4AB188290D53BE007180A2 /* Request.swift in Sources */,
 				9F4AB1CA290E47CD007180A2 /* UIImageView+Extension.swift in Sources */,
 				9F4AB1C5290D88A7007180A2 /* LogMessage.swift in Sources */,
@@ -592,6 +599,7 @@
 				9F4AB1A5290D6B12007180A2 /* ListLayout.swift in Sources */,
 				9F4AB1C6290D88A7007180A2 /* LogLevelObserver.swift in Sources */,
 				9F4AB143290D2B3D007180A2 /* SceneDelegate.swift in Sources */,
+				9F4AB1D7290EBA30007180A2 /* Array+Extension.swift in Sources */,
 				9F4AB1A8290D6C5E007180A2 /* Configurable.swift in Sources */,
 				9F4AB1C3290D88A7007180A2 /* LogService.swift in Sources */,
 				9F4AB18D290D53BE007180A2 /* NetworkCoding.swift in Sources */,

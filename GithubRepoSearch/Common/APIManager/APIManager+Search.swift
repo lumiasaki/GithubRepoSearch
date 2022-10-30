@@ -30,7 +30,7 @@ extension SearchNamespace {
     ///   - sort: Sort method
     ///   - pcursor: Current page, default is 1
     /// - Returns: Repositories or NetworkError
-    func repository(keyword: String, sort: SearchRepositorySort = .stars, pcursor: Int = 1) async throws -> [Repository] {
+    func repository(keyword: String, sort: SearchRepositorySort = .stars, pcursor: Int = 1) async throws -> (repositories: [Repository], totalCount: Int) {
         let params = generateParams(with: keyword, sort: sort, pcursor: pcursor)
         
         guard let request = Request.searchRepository(params: params) else {
@@ -39,7 +39,7 @@ extension SearchNamespace {
         
         let result: SearchRepoResponse = try await URLSession.shared.fetch(request)
         
-        return result.items ?? []
+        return (result.items ?? [], result.totalCount ?? 0)
     }
 }
 

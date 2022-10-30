@@ -20,12 +20,12 @@ final class RepoResultListTests: XCTestCase {
     }
 
     func testRepoResultWithKeywordInput() throws {
-        let networkPublisherProvider: (String) -> AnyPublisher<[Repository], NetworkError> = { keyword in
-            return Future<[Repository], NetworkError> { promise in
-                promise(.success([
+        let networkPublisherProvider: (String, Int) -> AnyPublisher<(repositories: [Repository], totalCount: Int), NetworkError> = { keyword, _ in
+            return Future<(repositories: [Repository], totalCount: Int), NetworkError> { promise in
+                promise(.success(([
                     Repository(id: 1, name: keyword, owner: nil, htmlUrl: nil, repoDescription: nil, language: nil, stars: nil),
                     Repository(id: 2, name: "\(keyword)\(keyword)", owner: nil, htmlUrl: nil, repoDescription: nil, language: nil, stars: nil)
-                ]))
+                ], 2)))
             }.eraseToAnyPublisher()
         }
         
@@ -39,12 +39,38 @@ final class RepoResultListTests: XCTestCase {
         viewModel.keywordInput.send(keyword)
         
         let repositoryDisplayItems = try awaitPublisher(repositoryPublisher)
-        XCTAssertTrue(repositoryDisplayItems.last?.count == 2)
-        XCTAssertTrue(repositoryDisplayItems.last?[0].id == 1)
-        XCTAssertTrue(repositoryDisplayItems.last?[1].id == 2)
+        XCTAssertTrue(repositoryDisplayItems.last?.repositories.count == 2)
+        XCTAssertTrue(repositoryDisplayItems.last?.repositories[0].id == 1)
+        XCTAssertTrue(repositoryDisplayItems.last?.repositories[1].id == 2)
         
-        XCTAssertTrue(repositoryDisplayItems.last?[0].repositoryName == keyword)
-        XCTAssertTrue(repositoryDisplayItems.last?[1].repositoryName == "\(keyword)\(keyword)")
+        XCTAssertTrue(repositoryDisplayItems.last?.repositories[0].repositoryName == keyword)
+        XCTAssertTrue(repositoryDisplayItems.last?.repositories[1].repositoryName == "\(keyword)\(keyword)")
+        
+        XCTAssertTrue(repositoryDisplayItems.last?.hasMore == false)
+    }
+    
+    func testHasMore() throws {
+        let networkPublisherProvider: (String, Int) -> AnyPublisher<(repositories: [Repository], totalCount: Int), NetworkError> = { keyword, _ in
+            return Future<(repositories: [Repository], totalCount: Int), NetworkError> { promise in
+                promise(.success(([
+                    Repository(id: 1, name: keyword, owner: nil, htmlUrl: nil, repoDescription: nil, language: nil, stars: nil),
+                    Repository(id: 2, name: "\(keyword)\(keyword)", owner: nil, htmlUrl: nil, repoDescription: nil, language: nil, stars: nil)
+                ], 5)))
+            }.eraseToAnyPublisher()
+        }
+        
+        let viewModel = RepoResultListViewModel(networkPublisherProvider)
+        
+        let repositoryPublisher = viewModel.repositories
+            .collect(2)
+            .first()
+        
+        let keyword = "A"
+        viewModel.keywordInput.send(keyword)
+        
+        let repositoryDisplayItems = try awaitPublisher(repositoryPublisher)
+        XCTAssertTrue(repositoryDisplayItems.last?.repositories.count == 2)
+        XCTAssertTrue(repositoryDisplayItems.last?.hasMore == true)
     }
     
 }
