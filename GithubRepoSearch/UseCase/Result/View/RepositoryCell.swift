@@ -17,6 +17,7 @@ final class RepositoryCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setContentCompressionResistancePriority(.required, for: .horizontal)
         view.setContentHuggingPriority(.required, for: .horizontal)
+        view.setContentCompressionResistancePriority(.required, for: .vertical)
         view.layer.cornerRadius = ownerIconImageSize.height / 2
         view.layer.borderColor = UIColor.systemGray.cgColor
         view.layer.borderWidth = 0.5
@@ -109,8 +110,11 @@ extension RepositoryCell {
             mainContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             mainContainer.topAnchor.constraint(equalTo: contentView.topAnchor),
             mainContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            mainContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+        
+        let mainContainerBottomConstraint = mainContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        mainContainerBottomConstraint.isActive = true
+        mainContainerBottomConstraint.priority = .defaultHigh
         
         let ownerContainer = UIStackView()
         ownerContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -119,8 +123,9 @@ extension RepositoryCell {
         
         NSLayoutConstraint.activate([
             ownerIconImageView.widthAnchor.constraint(equalToConstant: ownerIconImageSize.width),
-            ownerIconImageView.heightAnchor.constraint(equalToConstant: ownerIconImageSize.height),
+            ownerIconImageView.heightAnchor.constraint(equalToConstant: ownerIconImageSize.height)
         ])
+        
         ownerContainer.addArrangedSubview(ownerIconImageView)
         ownerContainer.addArrangedSubview(ownerNameLabel)
         

@@ -99,9 +99,9 @@ extension HomeViewController {
         
         let width = UIScreen.main.bounds.size.width * widthRatio
         
-        NSLayoutConstraint.activate([
-            result.widthAnchor.constraint(equalToConstant: width)
-        ])
+        let constraint = result.widthAnchor.constraint(equalToConstant: width)
+        constraint.isActive = true
+        constraint.priority = .defaultHigh
         
         return result
     }
