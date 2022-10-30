@@ -10,9 +10,10 @@ import Combine
 
 final class RepoResultListViewController: UIViewController {
     
-    private enum Section {
+    private enum Section: Int {
         
         case repositories
+        case footer
     }
     
     let viewModel: RepoResultListViewModel
@@ -22,10 +23,11 @@ final class RepoResultListViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemGroupedBackground
         view.delegate = self
+        
         return view
     }()
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, RepositoryDisplayItem>! = nil
+    private var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
     private var bag: Set<AnyCancellable> = Set()
     
@@ -63,12 +65,31 @@ extension RepoResultListViewController {
     }
     
     private func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<RepositoryCell, RepositoryDisplayItem> { (cell, indexPath, repository) in
+        let repositoryCellRegistration = UICollectionView.CellRegistration<RepositoryCell, RepositoryDisplayItem> { (cell, indexPath, repository) in
             return cell.configure(repository)
         }
         
-        dataSource = UICollectionViewDiffableDataSource<Section, RepositoryDisplayItem>(collectionView: collectionView) { (collectionView: UICollectionView, indexPath: IndexPath, repository: RepositoryDisplayItem) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: repository)
+        let footerCellRegistration = UICollectionView.CellRegistration<RepositoryListFooterCell, RepositoryListFooterCell.FooterType> { (cell, indexPath, footerType) in
+            return cell.type = footerType
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(collectionView: collectionView) { (collectionView: UICollectionView, indexPath: IndexPath, data: AnyHashable) -> UICollectionViewCell? in
+            guard let section = Section(rawValue: indexPath.section) else {
+                return nil
+            }
+            
+            switch section {
+            case .repositories:
+                if let repository = data as? RepositoryDisplayItem {
+                    return collectionView.dequeueConfiguredReusableCell(using: repositoryCellRegistration, for: indexPath, item: repository)
+                }
+            case .footer:
+                if let type = data as? RepositoryListFooterCell.FooterType {
+                    return collectionView.dequeueConfiguredReusableCell(using: footerCellRegistration, for: indexPath, item: type)
+                }
+            }
+            
+            return nil
         }
     }
     
@@ -76,14 +97,35 @@ extension RepoResultListViewController {
         viewModel
             .repositories
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] repositories in
-                var snapshot = NSDiffableDataSourceSnapshot<Section, RepositoryDisplayItem>()
-                snapshot.appendSections([.repositories])
-                snapshot.appendItems(repositories)
+            .sink { [weak self] repositoriesInfo in
+                var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
+                
+                snapshot.appendSections([.repositories, .footer])
+                
+                snapshot.appendItems(repositoriesInfo.repositories, toSection: .repositories)
+                
+                snapshot.appendItems([repositoriesInfo.hasMore ? RepositoryListFooterCell.FooterType.loadMore : RepositoryListFooterCell.FooterType.noMore])
+                
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
             }
             .store(in: &bag)
-    }
+        
+        viewModel
+            .error
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] error in
+                guard let error = error else {
+                    return
+                }
+                let alertController = UIAlertController(title: error.localizedDescription, message: nil, preferredStyle: .alert)
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+                alertController.addAction(cancelAction)
+                
+                self?.present(alertController, animated: true)
+            }
+            .store(in: &bag)
+    }        
 }
 
 extension RepoResultListViewController: UISearchResultsUpdating {
@@ -95,5 +137,12 @@ extension RepoResultListViewController: UISearchResultsUpdating {
 
 extension RepoResultListViewController: UICollectionViewDelegate {
     
-    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let section = Section(rawValue: indexPath.section), section == .footer else {
+            return
+        }
+        
+        // reach to the end of list
+        viewModel.tryRequestNextPageIfNeeded()
+    }
 }
