@@ -24,7 +24,7 @@ class HomeViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = .preferredFont(forTextStyle: .headline)
         view.textColor = .label
-        view.text = "My Workspace"
+        view.text = LocalizationConstant.Home.myWorkspace.rawValue.localized()
         return view
     }()
     
@@ -41,7 +41,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController {
     
     private func setUp() {
-        title = "Search"
+        title = LocalizationConstant.Home.searchTitle.rawValue.localized()
         
         navigationItem.searchController = searchController
         

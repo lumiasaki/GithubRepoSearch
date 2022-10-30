@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  GithubRepoSearch
+
+  Created by tianren.zhu on 2022/10/31.
+  
+*/
+
+"home_search_title" = "Search";
+"home_my_workspace" = "My Workspace";
