@@ -74,6 +74,13 @@ final class RepositoryCell: UICollectionViewCell {
         return view
     }()
     
+    private lazy var bottomLineView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemGray4
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -143,6 +150,14 @@ extension RepositoryCell {
         starsAndLanguageContainer.addArrangedSubview(UIView.stackViewSpacer(.horizontal))
         
         mainContainer.addArrangedSubview(starsAndLanguageContainer)
+        
+        contentView.addSubview(bottomLineView)
+        NSLayoutConstraint.activate([
+            bottomLineView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            bottomLineView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            bottomLineView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            bottomLineView.heightAnchor.constraint(equalToConstant: 1)
+        ])
     }
 }
 

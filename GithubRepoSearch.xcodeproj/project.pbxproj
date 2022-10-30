@@ -56,6 +56,7 @@
 		9F4AB1D3290E551D007180A2 /* RepoResultListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D2290E551D007180A2 /* RepoResultListTests.swift */; };
 		9F4AB1D5290E855F007180A2 /* RepositoryListFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D4290E855F007180A2 /* RepositoryListFooterCell.swift */; };
 		9F4AB1D7290EBA30007180A2 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D6290EBA30007180A2 /* Array+Extension.swift */; };
+		9F4AB1D9290EDADE007180A2 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4AB1D8290EDADE007180A2 /* LoadingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +130,7 @@
 		9F4AB1D2290E551D007180A2 /* RepoResultListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoResultListTests.swift; sourceTree = "<group>"; };
 		9F4AB1D4290E855F007180A2 /* RepositoryListFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListFooterCell.swift; sourceTree = "<group>"; };
 		9F4AB1D6290EBA30007180A2 /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		9F4AB1D8290EDADE007180A2 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -366,6 +368,7 @@
 			children = (
 				9F4AB1AA290D6D04007180A2 /* RepositoryCell.swift */,
 				9F4AB1D4290E855F007180A2 /* RepositoryListFooterCell.swift */,
+				9F4AB1D8290EDADE007180A2 /* LoadingView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -559,6 +562,7 @@
 				9F4AB18B290D53BE007180A2 /* StatusCode.swift in Sources */,
 				9F4AB1A2290D685E007180A2 /* RepositoryDisplayItem.swift in Sources */,
 				9F4AB1CE290E50C1007180A2 /* Double+Extension.swift in Sources */,
+				9F4AB1D9290EDADE007180A2 /* LoadingView.swift in Sources */,
 				9F4AB1C4290D88A7007180A2 /* LogLevel.swift in Sources */,
 				9F4AB1B3290D7717007180A2 /* DemandBuffer.swift in Sources */,
 				9F4AB193290D5918007180A2 /* SearchRepoResponse.swift in Sources */,

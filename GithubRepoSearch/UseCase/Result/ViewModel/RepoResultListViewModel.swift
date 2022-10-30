@@ -66,21 +66,30 @@ final class RepoResultListViewModel {
         
         // keyword throttled input publisher
         let keyword = keywordInput
-            .dropFirst()
+            .replaceNil(with: "")
             .removeDuplicates()
-            .throttle(for: 0.3, scheduler: DispatchQueue.main, latest: true)
-            .compactMap { $0 }
+            .throttle(for: 0.2, scheduler: DispatchQueue.main, latest: true)
         
         // once keyword changed, assign pcursor to default value
         keyword
+            .filter { !$0.isEmpty } // empty keyword will make the request failed, so we need to filter out them
             .sink { [weak self] k in
                 self?.pcursor.value = 1
             }
             .store(in: &bag)
         
+        // when keyword is empty, clear the repositories
+        keyword
+            .filter { $0.isEmpty }
+            .sink { [weak self] _ in
+                self?.repositoriesSubject.send(([], false))
+            }
+            .store(in: &bag)
+        
         // for logger
-        pcursor.sink { p in
+        pcursor.sink { [weak self] p in
             Logger.log("change pcursor to \(p)", level: .info)
+            self?.loadingSubject.send(true)
         }
         .store(in: &bag)
         
@@ -94,14 +103,6 @@ final class RepoResultListViewModel {
             .switchToLatest()
             .share()
         
-        // turn out the loading states
-        repositoriesStream
-            .map { _ in false }
-            .sink { [weak self] loading in
-                self?.loadingSubject.send(loading)
-            }
-            .store(in: &bag)
-        
         // process success of network request ( due to materialize() )
         repositoriesStream
             .values()
@@ -109,6 +110,8 @@ final class RepoResultListViewModel {
                 guard let `self` = self else {
                     return
                 }
+                
+                self.loadingSubject.send(false)
                 
                 let previousRepositoryDisplayItems = self.repositoriesSubject.value.repositories
                                 
@@ -136,6 +139,7 @@ final class RepoResultListViewModel {
             .failures()
             .sink { [weak self] error in
                 Logger.log("received error: \(error.localizedDescription)", level: .error)
+                self?.loadingSubject.send(false)
                 self?.errorSubject.send(error)
                 self?.repositoriesSubject.send(([], false))
             }
