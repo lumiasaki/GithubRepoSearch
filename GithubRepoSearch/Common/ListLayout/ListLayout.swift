@@ -11,7 +11,8 @@ enum ListLayout {
     
     /// Layout of repository list, just a plain list layout
     static var defaultPlainListLayout: UICollectionViewLayout {
-        let config = UICollectionLayoutListConfiguration(appearance: .plain)
+        var config = UICollectionLayoutListConfiguration(appearance: .plain)
+        config.showsSeparators = false
         return UICollectionViewCompositionalLayout.list(using: config)
     }
 }

@@ -15,6 +15,9 @@ struct SearchRepoResponse: Codable, Hashable, Equatable {
     
     /// Current page repositories
     var items: [Repository]?
+        
+    /// Error message
+    var message: String?
     
     private enum CodingKeys: String, CodingKey {
         

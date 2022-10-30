@@ -28,6 +28,12 @@ final class RepoResultListViewController: UIViewController {
         return view
     }()
     
+    private lazy var loadingView: LoadingView = {
+        let view = LoadingView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
     private var bag: Set<AnyCancellable> = Set()
@@ -63,6 +69,14 @@ extension RepoResultListViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        view.addSubview(loadingView)
+        NSLayoutConstraint.activate([
+            loadingView.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
+            loadingView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            loadingView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
+            loadingView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
+        ])
     }
     
     private func configureDataSource() {
@@ -95,22 +109,42 @@ extension RepoResultListViewController {
     }
     
     private func bindViewModel() {
+        // observe repositories then generate data source snapshot
         viewModel
             .repositories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] repositoriesInfo in
                 var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
                 
-                snapshot.appendSections([.repositories, .footer])
+                var sections: [Section] = [.repositories]
                 
+                let shouldIncludeFooterSection = self?.viewModel.keywordInput.value?.isEmpty == false
+                if shouldIncludeFooterSection {
+                    sections.append(.footer)
+                }
+                
+                snapshot.appendSections(sections)
                 snapshot.appendItems(repositoriesInfo.repositories, toSection: .repositories)
                 
-                snapshot.appendItems([repositoriesInfo.hasMore ? RepositoryListFooterCell.FooterType.loadMore : RepositoryListFooterCell.FooterType.noMore])
+                if shouldIncludeFooterSection {
+                    snapshot.appendItems([repositoriesInfo.hasMore ? RepositoryListFooterCell.FooterType.loadMore : RepositoryListFooterCell.FooterType.noMore])
+                }
                 
                 self?.dataSource.apply(snapshot, animatingDifferences: true)
             }
             .store(in: &bag)
         
+        // based on the repositories event and glance at keyword input value to show or hide loading view
+        viewModel
+            .repositories
+            .receive(on: DispatchQueue.main)
+            .map { [weak self] _ in
+                return self?.viewModel.keywordInput.value?.isEmpty == false
+            }
+            .assign(to: \.isHidden, on: loadingView)
+            .store(in: &bag)
+        
+        // jump to detail by given url
         viewModel
             .jumpToRepositoryDetail
             .receive(on: DispatchQueue.main)
@@ -121,6 +155,7 @@ extension RepoResultListViewController {
             }
             .store(in: &bag)
         
+        // show error when error occurred
         viewModel
             .error
             .receive(on: DispatchQueue.main)
