@@ -54,7 +54,7 @@ extension HomeViewController {
         
         let fakeViewsContainer = UIView()
         fakeViewsContainer.translatesAutoresizingMaskIntoConstraints = false
-        fakeViewsContainer.layer.borderColor = UIColor.systemGroupedBackground.cgColor
+        fakeViewsContainer.layer.borderColor = UIColor.systemGray6.cgColor
         fakeViewsContainer.layer.borderWidth = 5
         fakeViewsContainer.layer.cornerRadius = 8
         
