@@ -246,7 +246,6 @@
 		9F4AB175290D3F0C007180A2 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				9F4AB177290D3F18007180A2 /* ViewModel */,
 				9F4AB176290D3F10007180A2 /* ViewController */,
 			);
 			path = Home;
@@ -258,13 +257,6 @@
 				9F4AB144290D2B3D007180A2 /* HomeViewController.swift */,
 			);
 			path = ViewController;
-			sourceTree = "<group>";
-		};
-		9F4AB177290D3F18007180A2 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		9F4AB178290D43AF007180A2 /* Result */ = {
