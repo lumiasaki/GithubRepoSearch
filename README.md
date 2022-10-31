@@ -1,5 +1,7 @@
 # GithubRepoSearch
 
+__If dear reviewers have any questions on the submission, you can create 'issue's on this repository to discuss the details with me if you would like to.__
+
 Tested on XCode 14.0.1.
 
 First of all, thanks for giving this take home coding assignment to me, it is a really great one to evaluate the performance and skill of candidates.
