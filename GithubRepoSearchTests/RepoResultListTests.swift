@@ -73,4 +73,50 @@ final class RepoResultListTests: XCTestCase {
         XCTAssertTrue(repositoryDisplayItems.last?.hasMore == true)
     }
     
+    func testError() throws {
+        let networkPublisherProvider: (String, Int) -> AnyPublisher<(repositories: [Repository], totalCount: Int), NetworkError> = { keyword, _ in
+            return Future<(repositories: [Repository], totalCount: Int), NetworkError> { promise in
+                promise(.failure(NetworkError.clientError))
+            }.eraseToAnyPublisher()
+        }
+        
+        let viewModel = RepoResultListViewModel(networkPublisherProvider)
+        
+        let errorPublisher = viewModel.error
+            .collect(1)
+            .first()
+        
+        let keyword = "A"
+        viewModel.keywordInput.send(keyword)
+        
+        let errorPublisherItems = try awaitPublisher(errorPublisher)
+        XCTAssertEqual(errorPublisherItems.first, NetworkError.clientError)
+    }
+    
+    func testLoading() throws {
+        let networkPublisherProvider: (String, Int) -> AnyPublisher<(repositories: [Repository], totalCount: Int), NetworkError> = { keyword, _ in
+            return Future<(repositories: [Repository], totalCount: Int), NetworkError> { promise in
+                promise(.success(([
+                    Repository(id: 1, name: keyword, owner: nil, htmlUrl: nil, repoDescription: nil, language: nil, stars: nil),
+                    Repository(id: 2, name: "\(keyword)\(keyword)", owner: nil, htmlUrl: nil, repoDescription: nil, language: nil, stars: nil)
+                ], 5)))
+            }.eraseToAnyPublisher()
+        }
+        
+        let viewModel = RepoResultListViewModel(networkPublisherProvider)
+        
+        let loadingPublisher = viewModel.loading
+            .dropFirst()    // first to be used on ui in the app
+            .collect(2)
+            .first()
+        
+        let keyword = "A"
+        viewModel.keywordInput.send(keyword)
+        
+        let loadingPublisherItems = try awaitPublisher(loadingPublisher)
+        XCTAssertTrue(loadingPublisherItems.count == 2)
+        XCTAssertEqual(loadingPublisherItems.first, true)
+        XCTAssertEqual(loadingPublisherItems.last, false)
+    }
+    
 }
