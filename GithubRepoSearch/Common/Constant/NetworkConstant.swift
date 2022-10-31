@@ -10,5 +10,5 @@ import Foundation
 enum NetworkConstant: String {
     
     /// Private token of Github API   
-    case token = "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"
+    case token = "Z2hwXzBMaXB4ZkV5UnljR2VseWRiYzNtVXdoNDdIS3E4cTBNZG1GdA=="    
 }

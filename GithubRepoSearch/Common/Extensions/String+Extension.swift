@@ -14,4 +14,12 @@ extension String {
     func localized() -> String {
         return NSLocalizedString(self, comment: "")
     }
+    
+    func decodeBase64String() -> String? {
+        guard let data = Data(base64Encoded: self) else {
+            return nil
+        }
+        
+        return String(data: data, encoding: .utf8)
+    }
 }
