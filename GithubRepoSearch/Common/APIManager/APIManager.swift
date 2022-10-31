@@ -13,7 +13,7 @@ struct GithubRepoSearchAPIEnvironment: EnvironmentProtocol {
     var host: String = "api.github.com"
     var commonHeaders: [String : String] = [
         "Accept": "application/vnd.github+json",
-        "Authorization": "Bearer \(NetworkConstant.token.rawValue)"
+        "Authorization": "Bearer \(NetworkConstant.token.rawValue.decodeBase64String()!)"   // if we can not get token from base64, just crash, it's a fatal error
     ]
     var commonQueries: [URLQueryItem]?
 }
