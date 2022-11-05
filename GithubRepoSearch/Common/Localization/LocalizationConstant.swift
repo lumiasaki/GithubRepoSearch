@@ -14,5 +14,6 @@ enum LocalizationConstant {
         
         case searchTitle = "home_search_title"
         case myWorkspace = "home_my_workspace"
+        case noMoreRepository = "home_no_more_repository"
     }
 }

@@ -39,7 +39,7 @@ final class RepositoryListFooterCell: UICollectionViewCell {
         view.setContentCompressionResistancePriority(.required, for: .horizontal)
         view.numberOfLines = 2
         view.textAlignment = .center
-        view.text = "No more repository"
+        view.text = LocalizationConstant.Home.noMoreRepository.rawValue.localized()
         return view
     }()
     
